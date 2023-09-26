@@ -1,23 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import file from "../assets/application-vnd.appimage.svg";
 import folder from "../assets/folder.svg";
-import { api, baseUrl } from "../services/api";
+import { useFile } from "../contexts/Files";
+import { api } from "../services/api";
+import { Modal } from "./Modal";
 
 interface Path {
   name: string;
   children?: Path[];
+  isOpen: boolean;
 }
-
-// async function getLocalIpAddress() {
-//   try {
-//     const response = await fetch("https://api64.ipify.org?format=json");
-//     const data = await response.json();
-//     return data.ip;
-//   } catch (error) {
-//     console.error("Erro ao obter o endereço IP:", error);
-//     return "http://localhost:5555";
-//   }
-// }
 
 function getPath(root: Path, targetName: string): string | null {
   function findPath(node: Path, currentPath: string): string | null {
@@ -44,24 +36,13 @@ function getPath(root: Path, targetName: string): string | null {
 }
 
 interface SystemFileProps {
-  dependence: boolean;
+  actualDirectory: Path;
 }
 
-export function SystemFile({ dependence }: SystemFileProps) {
-  const [directoryTree, setDirectoryTree] = useState<Path>({} as Path);
+export function SystemFile({ actualDirectory }: SystemFileProps) {
+  // const [directoryTree, setDirectoryTree] = useState<Path>({} as Path);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await api.get("/listar");
-        const result = response.data;
-        setDirectoryTree(result);
-      } catch (error) {
-        console.error("Erro ao obter os dados:", error);
-      }
-    })();
-  }, [dependence]);
+  const { setViewPath, directoryTree, setPath } = useFile();
 
   async function handleDownload(path: string) {
     await api.get(`/download${path}`);
@@ -71,34 +52,54 @@ export function SystemFile({ dependence }: SystemFileProps) {
     if (!node) return null;
 
     return (
-      <div className="flex flex-wrap gap-2" key={node.name}>
+      <div className="flex flex-wrap gap-[10px]" key={node.name}>
         <div
-          className="flex flex-col items-center w-[100px] bg-slate-500 "
+          className="flex flex-col items-center w-[90px] h-28 overflow-hidden"
           onClick={() => {
+            node.isOpen = !node.isOpen;
+            setIsOpen(!isOpen);
+
+            setPath(getPath(directoryTree, node.name)!);
             handleDownload(getPath(directoryTree, node.name)!);
+
+            node.children && setViewPath(node);
           }}
         >
           {node.children ? (
-            <img src={folder} width={50} />
+            <img src={folder} width={45} />
           ) : (
-            <a href={`${baseUrl}/download${getPath(directoryTree, node.name)}`}>
-              <img
-                src={file}
-                width={50}
-                title={`${getPath(directoryTree, node.name)}`}
-              />
-            </a>
+            <Modal
+              trigger={
+                <img
+                  src={file}
+                  width={45}
+                  title={`${getPath(directoryTree, node.name)}`}
+                />
+              }
+              title={node.name}
+            >
+              <div className="flex">
+                <div>
+
+                  <span>Baixar</span>
+                </div>
+
+              </div>
+            </Modal>
           )}
 
-          <span className="w-full text-center truncate">
-            {node.children ? node.name : node.name}
+          {/* <a href={`${baseUrl}/download${getPath(directoryTree, node.name)}`}></a> */}
+          <span className="w-full text-center break-all text-slate-100">
+            {node.children ? node.name : String(node.name)}
           </span>
         </div>
 
-        {node.children && node.children.map((child) => renderTree(child))}
+        {node.isOpen &&
+          node.children &&
+          node.children.map((child) => renderTree(child))}
       </div>
     );
   };
 
-  return <div className="">{directoryTree && renderTree(directoryTree)}</div>;
+  return <div>{actualDirectory && renderTree(actualDirectory)}</div>;
 }

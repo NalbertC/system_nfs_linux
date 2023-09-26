@@ -10,7 +10,7 @@ export const storage = multer.diskStorage({
     // );
   },
   filename: (request, file, callBack) => {
-    crypto.randomBytes(16, (err, hash) => {
+    crypto.randomBytes(5, (err, hash) => {
 
 
       const name = `${hash.toString("hex")}-${file.originalname}`;

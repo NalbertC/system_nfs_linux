@@ -4,7 +4,11 @@ export default {
     "./src/**/*.tsx", "./index.html"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        ubuntu: ["Ubuntu", "sans-serif"]
+      }
+    },
   },
   plugins: [],
 }
