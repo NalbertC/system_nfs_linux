@@ -8,8 +8,8 @@ export function WebRoutes(){
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/files" element={<Files />} />
+        <Route path="/files" element={<Home />} />
+        <Route path="/" element={<Files />} />
       </Routes>
     </Router>
   );

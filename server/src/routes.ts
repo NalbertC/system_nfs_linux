@@ -3,7 +3,9 @@ import fs from "fs";
 import multer from "multer";
 import path from "path";
 import multerConfig from "./configs/multer";
+import DeleteFileControler from "./controllers/DeleteFileControler";
 import DownloadController from "./controllers/DownloadController";
+import FolderControler from "./controllers/FolderControler";
 import ListFileController from "./controllers/ListFileController";
 import UploadController from "./controllers/UploadController";
 
@@ -41,5 +43,13 @@ routes.post(
 routes.get("/listar", ListFileController.getFiles);
 
 routes.get("/download/:rota(*)", DownloadController.download);
+
+routes.delete("/delete/:rota(*)", DeleteFileControler.deleteFile);
+
+
+routes.post("/folder/:rota(*)", FolderControler.createFolder);
+routes.delete("/folder/:rota(*)", FolderControler.deleteFolder);
+
+
 
 export { routes };

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import folder from "../assets/folder.svg";
 import { useFile } from "../contexts/Files";
-import { api } from "../services/api";
 
 interface Path {
   name: string;
@@ -42,9 +41,7 @@ export function Diretorio({ directoryTree }: SystemFileProps) {
   const [isOpen, setIsOpen,] = useState(false);
   const { setPath, setViewPath } = useFile();
 
-  async function handleDownload(path: string) {
-    await api.get(`/download${path}`);
-  }
+
 
   interface RenderTreeProps {
     node: Path;
@@ -69,7 +66,6 @@ export function Diretorio({ directoryTree }: SystemFileProps) {
             node.isOpen = !node.isOpen;
             setPath(getPath(directoryTree, node.name)!);
             setViewPath(node)
-            handleDownload(getPath(directoryTree, node.name)!);
           }}
         >
           <span
@@ -98,7 +94,7 @@ export function Diretorio({ directoryTree }: SystemFileProps) {
           {node.isOpen &&
             node.children &&
             node.children.map((child) => {
-              return <RenderTree node={child} padding={10} />;
+              return <RenderTree key={child.name} node={child} padding={10} />;
             })}
         </span>
       </div>
@@ -107,7 +103,7 @@ export function Diretorio({ directoryTree }: SystemFileProps) {
 
   return (
     <div>
-      {directoryTree && <RenderTree padding={0} node={directoryTree} />}
+      {directoryTree && <RenderTree key={directoryTree.name} padding={0} node={directoryTree} />}
     </div>
   );
 }

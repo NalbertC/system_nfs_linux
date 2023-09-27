@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { BiSolidDownload, BiTrash } from "react-icons/bi";
 import file from "../assets/application-vnd.appimage.svg";
 import folder from "../assets/folder.svg";
 import { useFile } from "../contexts/Files";
-import { api } from "../services/api";
+import { api, baseUrl } from "../services/api";
 import { Modal } from "./Modal";
 
 interface Path {
@@ -42,13 +43,17 @@ interface SystemFileProps {
 export function SystemFile({ actualDirectory }: SystemFileProps) {
   // const [directoryTree, setDirectoryTree] = useState<Path>({} as Path);
   const [isOpen, setIsOpen] = useState(false);
-  const { setViewPath, directoryTree, setPath } = useFile();
+  const { setViewPath, directoryTree, setPath,setDependence, dependence } = useFile();
 
-  async function handleDownload(path: string) {
-    await api.get(`/download${path}`);
-  }
+
+
 
   const renderTree = (node: Path) => {
+    async function handleDelete() {
+      await api.delete(`/delete${getPath(directoryTree, node.name)}`);
+      setDependence(!dependence)
+    }
+
     if (!node) return null;
 
     return (
@@ -59,8 +64,7 @@ export function SystemFile({ actualDirectory }: SystemFileProps) {
             node.isOpen = !node.isOpen;
             setIsOpen(!isOpen);
 
-            setPath(getPath(directoryTree, node.name)!);
-            handleDownload(getPath(directoryTree, node.name)!);
+            node.children && setPath(getPath(directoryTree, node.name)!);
 
             node.children && setViewPath(node);
           }}
@@ -69,6 +73,7 @@ export function SystemFile({ actualDirectory }: SystemFileProps) {
             <img src={folder} width={45} />
           ) : (
             <Modal
+              key={node.name}
               trigger={
                 <img
                   src={file}
@@ -78,17 +83,34 @@ export function SystemFile({ actualDirectory }: SystemFileProps) {
               }
               title={node.name}
             >
-              <div className="flex">
-                <div>
-
-                  <span>Baixar</span>
+              <div className="flex w-full items-center justify-evenly py-3">
+                <div className="flex flex-col gap-2 items-center">
+                  <BiSolidDownload size={30} className="text-gray-300" />
+                  <a
+                    href={`${baseUrl}/download${getPath(
+                      directoryTree,
+                      node.name
+                    )}`}
+                  >
+                    <button className="h-8 px-4 font-bold bg-[#2f2f2f] rounded-md ">
+                      Baixar
+                    </button>
+                  </a>
                 </div>
+                <div className="flex flex-col gap-2 items-center">
+                  <BiTrash size={30} className="text-gray-300" />
 
+                  <button
+                    className="h-8 px-4 font-bold  rounded-md bg-[#e9524a]"
+                    onClick={handleDelete}
+                  >
+                    Excluir
+                  </button>
+                </div>
               </div>
             </Modal>
           )}
 
-          {/* <a href={`${baseUrl}/download${getPath(directoryTree, node.name)}`}></a> */}
           <span className="w-full text-center break-all text-slate-100">
             {node.children ? node.name : String(node.name)}
           </span>

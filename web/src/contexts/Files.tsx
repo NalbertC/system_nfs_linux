@@ -10,6 +10,14 @@ export interface Path {
 type FielContextType = {
   dependence: boolean;
   setDependence: React.Dispatch<React.SetStateAction<boolean>>;
+  modalInfo: boolean;
+  setModalInfo: React.Dispatch<React.SetStateAction<boolean>>;
+  modalNewFolder: boolean;
+  setModalNewFolder: React.Dispatch<React.SetStateAction<boolean>>;
+  modalUpload: boolean;
+  setModalUpload: React.Dispatch<React.SetStateAction<boolean>>;
+  modalDeleteFolder: boolean;
+  setModalDeleteFolder: React.Dispatch<React.SetStateAction<boolean>>;
   setViewPath: React.Dispatch<React.SetStateAction<Path>>;
   directoryTree: Path;
   viewPath: Path;
@@ -27,6 +35,10 @@ export const FileContext = createContext({} as FielContextType);
 
 export function FileContextProvider(props: FileContextProviderProps) {
   const [dependence, setDependence] = useState(false);
+  const [modalInfo, setModalInfo] = useState(false);
+  const [modalUpload, setModalUpload] = useState(false);
+  const [modalNewFolder, setModalNewFolder] = useState(false);
+  const [modalDeleteFolder, setModalDeleteFolder] = useState(false);
   const [directoryTree, setDirectoryTree] = useState<Path>({} as Path);
   const [viewPath, setViewPath] = useState<Path>({} as Path);
   const [path, setPath] = useState("/acesso");
@@ -53,6 +65,14 @@ export function FileContextProvider(props: FileContextProviderProps) {
         setPath,
         setViewPath,
         viewPath,
+        modalNewFolder,
+        setModalNewFolder,
+        modalDeleteFolder,
+        setModalDeleteFolder,
+        modalInfo,
+        setModalInfo,
+        modalUpload,
+        setModalUpload,
       }}
     >
       {props.children}
