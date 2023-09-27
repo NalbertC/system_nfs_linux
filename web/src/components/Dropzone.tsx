@@ -1,13 +1,15 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { BsPlus } from "react-icons/bs";
+import { useFile } from "../contexts/Files";
 
 interface DropzoneProps {
   onFileUploaded: (file: File) => void;
 }
 
 export function Dropzone({ onFileUploaded }: DropzoneProps) {
+  const {path} = useFile()
   const [selectedFileUrl, setSelectedFileUrl] = useState("");
+  const [file, setFile] = useState("");
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
 
@@ -16,7 +18,8 @@ export function Dropzone({ onFileUploaded }: DropzoneProps) {
 
     setSelectedFileUrl(fileUrl);
     onFileUploaded(file);
-  }, []);
+    setFile(file)
+  }, [onFileUploaded]);
   const { getRootProps, getInputProps, open } = useDropzone({
     onDrop,
 
@@ -32,19 +35,20 @@ export function Dropzone({ onFileUploaded }: DropzoneProps) {
       {selectedFileUrl ? (
         <>
           <span
-            className=""
+            className="w-full flex justify-center text-center"
             onClick={open}
           >
-            {}
+            { `${path}/${file.name}`}
           </span>
         </>
       ) : (
         <>
           <span
-            className=" w-full h-28 rounded-2xl bg-[#3a3a3a]  border-dashed border border-black flex items-center justify-center"
+            className=" w-full h-28 rounded-2xl bg-[#3a3a3a]  border-dashed border border-black flex items-center justify-center text-center text-slate-400 "
             onClick={open}
           >
-            <BsPlus size={50} />
+            Arraste e solte arquivos aqui,<br /> ou<br /> clique para selecionar arquivos
+            {/* <BsPlus size={50} /> */}
           </span>
         </>
       )}

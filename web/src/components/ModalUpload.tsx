@@ -4,17 +4,26 @@ import { useFile } from "../contexts/Files";
 import { api } from "../services/api";
 import { Dropzone } from "./Dropzone";
 
-interface ModalNewFolderProps { }
 
-export function ModalUpload({ }: ModalNewFolderProps) {
+
+export function ModalUpload() {
   const { path, setDependence, dependence, setModalUpload } = useFile();
   const [selectedFile, setSelectedFile] = useState<File>();
 
   async function handleDeleteFolder() {
     // e.preventDefault();
+    if (selectedFile === null || selectedFile === undefined) {
+      alert("Por favor selecione algum arquivo");
+    } else {
+      const data = new FormData();
+      !!selectedFile && data.append("file", selectedFile);
 
-    await api.delete(`/upload${path}`);
-    setDependence(!dependence);
+
+      await api.post(`/upload${path}`, data);
+
+      setDependence(!dependence);
+    }
+
 
   }
 
@@ -43,7 +52,7 @@ export function ModalUpload({ }: ModalNewFolderProps) {
               {selectedFile && (
                 <div className="flex w-full items-center justify-evenly gap-2">
                   <button
-                  type="button"
+                    type="button"
                     style={{ backgroundColor: "#515151" }}
                     className="h-9 px-6 font-bold bg-[#515151] rounded-md"
                     onClick={() => {
@@ -55,7 +64,7 @@ export function ModalUpload({ }: ModalNewFolderProps) {
 
                   <button
                     type="submit"
-                    style={{backgroundColor: "#478bf8"}}
+                    style={{ backgroundColor: "#478bf8" }}
                     className="h-9 px-6 font-bold  rounded-md bg-[#478bf8]"
                     onClick={handleDeleteFolder}
                   >

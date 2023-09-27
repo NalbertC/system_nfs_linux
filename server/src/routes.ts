@@ -35,7 +35,7 @@ routes.get("/files", (req, res) => {
 });
 
 routes.post(
-  "/upload",
+  "/upload/:rota(*)",
   multer(multerConfig).single("file"),
   UploadController.uploadFile
 );
@@ -46,10 +46,7 @@ routes.get("/download/:rota(*)", DownloadController.download);
 
 routes.delete("/delete/:rota(*)", DeleteFileControler.deleteFile);
 
-
 routes.post("/folder/:rota(*)", FolderControler.createFolder);
 routes.delete("/folder/:rota(*)", FolderControler.deleteFolder);
-
-
 
 export { routes };

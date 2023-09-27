@@ -1,13 +1,11 @@
-import React from "react";
 import { useFile } from "../contexts/Files";
 import { api } from "../services/api";
 
-interface ModalNewFolderProps {}
 
-export function ModalDeleteFolder({}: ModalNewFolderProps) {
+export function ModalDeleteFolder( ) {
   const { setModalDeleteFolder, path, setDependence, dependence } = useFile();
 
-  async function handleDeleteFolder(e: React.FormEvent) {
+  async function handleDeleteFolder() {
     // e.preventDefault();
 
     await api.delete(`/folder${path}`);

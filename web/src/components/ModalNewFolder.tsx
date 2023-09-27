@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFile } from "../contexts/Files";
 import { api } from "../services/api";
 import { ModalInfo } from "./ModalInfo";
 
-interface ModalNewFolderProps {}
 
-export function ModalNewFolder({}: ModalNewFolderProps) {
+
+export function ModalNewFolder() {
   const { setModalNewFolder, path } = useFile();
   const [folder, setFolder] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit() {
     // e.preventDefault();
-    if (path === "" || /^\s*$/.test(path) ) {
+    if (path === "" || /^\s*$/.test(path)) {
       return <ModalInfo />;
     }
 

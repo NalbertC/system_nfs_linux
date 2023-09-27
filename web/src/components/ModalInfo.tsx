@@ -1,8 +1,7 @@
 import { MdInfo } from "react-icons/md";
 
-interface ModalInfoProps {}
 
-export function ModalInfo({}: ModalInfoProps) {
+export function ModalInfo() {
   return (
     <div className="bg-black/50 fixed top-0 left-0 w-screen h-screen flex items-center justify-center ">
       <div className="fixed flex items-center justify-center w-screen top-0 left-0 h-screen">

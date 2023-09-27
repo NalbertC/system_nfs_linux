@@ -3,15 +3,14 @@ import { DropdownMenu } from "../components/DropdownMenu";
 import { ModalDeleteFolder } from "../components/ModalDeleteFolder";
 import { ModalNewFolder } from "../components/ModalNewFolder";
 import { ModalUpload } from "../components/ModalUpload";
-import { Diretorio } from "../components/Teste";
-import { SystemFile } from "../components/teste";
+import { Diretorio } from "../components/ViewPaths";
+import { SystemFile } from "../components/ViewTree";
 import { useFile } from "../contexts/Files";
 import "../styles/scroll.css";
 
-interface FilesProps {}
 
-export function Files({}: FilesProps) {
-  const { directoryTree, path, viewPath, modalNewFolder , modalDeleteFolder, modalUpload} = useFile();
+export function Files() {
+  const { directoryTree, path, viewPath, modalNewFolder, modalDeleteFolder, modalUpload } = useFile();
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-black">
@@ -25,7 +24,7 @@ export function Files({}: FilesProps) {
         </aside>
 
         {/* rigth */}
-        <aside className="w-[534px] bg-[#242424] rounded-r-[inherit] border-l border-l-black">
+        <aside className="w-full max-w-[534px] bg-[#242424] rounded-r-[inherit] border-l border-l-black">
           <header className="px-4 h-11 border-b border-black flex flex-row items-center justify-between gap-2">
             <div className="text-slate-200 h-6 bg-[#2f2f2f] px-1 rounded-md overflow-hidden flex-1">
               {path}
@@ -45,7 +44,7 @@ export function Files({}: FilesProps) {
 
       {modalNewFolder && <ModalNewFolder />}
       {modalDeleteFolder && <ModalDeleteFolder />}
-      { modalUpload && <ModalUpload />}
+      {modalUpload && <ModalUpload />}
     </div>
   );
 }
