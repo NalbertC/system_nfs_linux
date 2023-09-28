@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BiChevronDown } from "react-icons/bi";
+import { BiChevronRight } from "react-icons/bi";
 import folder from "../assets/folder.svg";
 import { useFile } from "../contexts/Files";
 
@@ -64,8 +64,7 @@ export function Diretorio({ directoryTree }: SystemFileProps) {
           className="group flex h-7  hover:bg-[#515151] px-2 gap-1 text-sm items-center rounded-md"
           onClick={() => {
             node.isOpen = !node.isOpen;
-            setPath(getPath(directoryTree, node.name)!);
-            setViewPath(node)
+
           }}
         >
           <span
@@ -74,20 +73,26 @@ export function Diretorio({ directoryTree }: SystemFileProps) {
               setIsOpen(!isOpen);
             }}
           >
-            <BiChevronDown
+            <BiChevronRight
               size={16}
               className={`transform transition-transform duration-200 ${
                 node.isOpen &&
-                " -rotate-90 transform transition-transform duration-200 "
+                "rotate-90 transform transition-transform duration-200 "
               }`}
             />
           </span>
+          <span className="flex flex-row items-center gap-1" onClick={()=>{
+            setPath(getPath(directoryTree, node.name)!);
+            setViewPath(node)
+          }}>
+
 
           {node.children && <img src={folder} width={16} />}
 
           {node.children && (
             <span className="truncate w-full">{node.name}</span>
-          )}
+            )}
+            </span>
         </div>
 
         <span>

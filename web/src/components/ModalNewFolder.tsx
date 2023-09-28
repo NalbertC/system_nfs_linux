@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useFile } from "../contexts/Files";
 import { api } from "../services/api";
-import { ModalInfo } from "./ModalInfo";
 
 
 
@@ -9,13 +8,13 @@ export function ModalNewFolder() {
   const { setModalNewFolder, path } = useFile();
   const [folder, setFolder] = useState("");
 
-  async function handleSubmit() {
-    // e.preventDefault();
-    if (path === "" || /^\s*$/.test(path)) {
-      return <ModalInfo />;
-    }
+  async function handleSubmit(e) {
+    if (folder === "" || /^\s*$/.test(folder)) {
+      e.preventDefault()
 
-    await api.post(`/folder${path}/${folder}`);
+      stop()
+    } else await api.post(`/folder${path}/${folder}`);
+
   }
 
   return (
